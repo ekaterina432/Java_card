@@ -1,5 +1,9 @@
 import java.time.LocalDate;
 import java.util.Random;
+import java.util.Properties;
+import javax.mail.*;
+import javax.mail.internet.*;
+
 
 public class Bank_card extends Client{
     private Client client;
@@ -49,19 +53,10 @@ public class Bank_card extends Client{
         return sb.toString();
     }
 
-//
-//    private boolean isValidCVC(String CVC) {
-//        String regex = "^\\d{3}$";
-//
-//        return CVC.matches(regex);
-//    }
     public Client getClient() {
         return client;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
-    }
 
     public String getNumber_card() {
         return number_card;
@@ -91,9 +86,6 @@ public class Bank_card extends Client{
         return CVC;
     }
 
-    public void setCVC(int CVC) {
-        this.CVC = CVC;
-    }
 
     @Override
     public String toString() {
@@ -105,13 +97,55 @@ public class Bank_card extends Client{
                 ", CVC: " + CVC +
                 '}';
     }
-/*
-    public String notification_expiration_date(LocalDate now) {
-        if ((date_issue.getMonthValue() - now.getMonthValue() <= 1 && now.getMonthValue() != 12) || (now.getMonthValue() == 12 && date_expiration.getMonthValue() == 1)) {
-            //
+
+    private void SendMessage(String recipientEmail) {
+        String senderEmail = "java.card4@gmail.com";
+        String senderPassword = "qgxv xwbq boly fbsy";
+
+        Properties properties = new Properties();
+        properties.put("mail.smtp.host", "smtp.gmail.com");
+        properties.put("mail.smtp.port", "587");
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+        Session session = Session.getDefaultInstance(properties, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(senderEmail, senderPassword);
+            }
+        });
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(senderEmail));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
+            message.setSubject("Уведомление об окончании срока действия карты.");
+            String fullname = client.getFIO();
+            message.setText("Здравствуйте, "+ nameClient(fullname)+ "! Срок действия вашей карты заканчивается через месяц.\n" +
+                    "Для перевыпуска карты оставьте заявку в личном кабинете или обратитесь  в любое отделение банка.   ");
+
+            Transport.send(message);
+
+            System.out.println("Письмо успешно отправлено.");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            System.out.println("Ошибка при отправке письма: " + e.getMessage());
         }
     }
-*/
+
+    public void notification_expiration_date(LocalDate now) {
+        if (((date_expiration.getMonthValue() - now.getMonthValue() <= 1) && (now.getMonthValue() != 12) && (now.getDayOfMonth() >= date_expiration.getDayOfMonth()) && (now.getYear() == date_expiration.getYear()))
+                || ((now.getMonthValue() == 12) && (date_expiration.getMonthValue() == 1) && (date_expiration.getYear() - now.getYear() == 1) &&(now.getDayOfMonth() >= date_expiration.getDayOfMonth()))) {
+            System.out.println("У клиента '" + client.getFIO()+"' заканчивается срок действия карты." );
+            SendMessage(client.getMail());
+        }
+        else if (now.isBefore(date_issue) || now.isAfter(date_expiration)) {
+            System.out.println("У клиента '"+ client.getFIO()+"' карта не активна.");
+        }
+        else{
+            System.out.println("У клиента '"+ client.getFIO()+"' срок действия карты больше месяца.");
+
+        }
+    }
+
 
 
 

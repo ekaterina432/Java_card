@@ -88,16 +88,18 @@ public class Client {
         this.FIO = FIO;
     }
 
-    public void setBirthday(LocalDate birthday) {
-        this.birthday = birthday;
-    }
-
     public void setMail(String mail) {
         this.mail = mail;
     }
 
     public void setNumber_password(long String) {
         this.number_password = number_password;
+    }
+
+
+    public String nameClient(String fullName){
+        String[] parts = fullName.split(" ");
+        return (parts[1]);
     }
 
     @Override
@@ -110,16 +112,6 @@ public class Client {
                 ", номер паспорта: " + number_password +
                 '}';
     }
-
-/*  private static Map<String, Integer> generate_id(ArrayList<Client> clients) {
-        Map<String, Integer> base = new HashMap<>();
-        for (int i = 0; i < clients.size(); i++) {
-            Client client = clients.get(i);
-            base.put(client.FIO, i);
-        }
-        return base;
-    }
-*/
 
 
 
