@@ -7,11 +7,29 @@ import java.util.UUID;
 
 public class Client {
 
+    /**
+     * Идентификационный номер
+     */
     private String id;
 
+    /**
+     * Фамилия,имя, отчество
+     */
     private String FIO;
+
+    /**
+     * День рождения
+     */
     private LocalDate birthday;
+
+    /**
+     * почтовый адрес
+     */
     private  String mail;
+
+    /**
+     * серия и номер паспорта
+     */
     private String number_password;
 
     public Client(){
@@ -56,7 +74,7 @@ public class Client {
     }
 
     private boolean isValidMail(String email) {
-        String emailRegex = "^\s*[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z]+\\.)+(com|ru)\s*$";
+        String emailRegex = "^\s*[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z]+\\.)+([a-zA-Z]+)\s*$";
         return email.matches(emailRegex);
     }
     private boolean isValidFIO(String FIO) {

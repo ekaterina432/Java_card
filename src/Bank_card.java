@@ -6,16 +6,35 @@ import javax.mail.internet.*;
 
 
 public class Bank_card extends Client{
+
+    /**
+     * Клиент банка
+     */
     private Client client;
+
+    /**
+     * Номер карты
+     */
     private String number_card;
+
+    /**
+     * Дата выпуска карты
+     */
     private LocalDate date_issue;
+
+    /**
+     * Дата окончания карты
+     */
     private LocalDate date_expiration;
+
+    /**
+     * Код CVC
+     */
     private  int CVC;
 
 
     public Bank_card(Client client,  LocalDate date_issue) {
         this.client = client;
-
         this.number_card = generateNumberCard();
         this.date_issue = date_issue;
         this.date_expiration = date_issue.plusYears(5);
@@ -41,16 +60,6 @@ public class Bank_card extends Client{
         this.date_expiration = date_issue.plusYears(5);
         Random random = new Random();
         this.CVC = random.nextInt(900) + 100;
-    }
-
-    private String generateNumberCard() {
-        Random random = new Random();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 16; i++) {
-            int d = random.nextInt(10);
-            sb.append(d);
-        }
-        return sb.toString();
     }
 
     public Client getClient() {
@@ -98,6 +107,25 @@ public class Bank_card extends Client{
                 '}';
     }
 
+
+    /**
+     * Рандомная генерация номера карты
+     * @return
+     */
+    private String generateNumberCard() {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 16; i++) {
+            int d = random.nextInt(10);
+            sb.append(d);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Отправка уведомления клиенту
+     * @param recipientEmail почта получателя
+     */
     private void SendMessage(String recipientEmail) {
         String senderEmail = "java.card4@gmail.com";
         String senderPassword = "qgxv xwbq boly fbsy";
@@ -131,6 +159,10 @@ public class Bank_card extends Client{
         }
     }
 
+    /**
+     * Проверка срока действия карты
+     * @param now текущий день
+     */
     public void notification_expiration_date(LocalDate now) {
         if (((date_expiration.getMonthValue() - now.getMonthValue() <= 1) && (now.getMonthValue() != 12) && (now.getDayOfMonth() >= date_expiration.getDayOfMonth()) && (now.getYear() == date_expiration.getYear()))
                 || ((now.getMonthValue() == 12) && (date_expiration.getMonthValue() == 1) && (date_expiration.getYear() - now.getYear() == 1) &&(now.getDayOfMonth() >= date_expiration.getDayOfMonth()))) {
