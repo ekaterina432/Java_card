@@ -151,8 +151,7 @@ public class Bank_card extends Client{
                     "Для перевыпуска карты оставьте заявку в личном кабинете или обратитесь  в любое отделение банка.   ");
 
             Transport.send(message);
-
-            System.out.println("Письмо успешно отправлено.");
+            System.out.println("Письмо успешно отправлено: '"+ fullname+"'");
         } catch (MessagingException e) {
             e.printStackTrace();
             System.out.println("Ошибка при отправке письма: " + e.getMessage());
@@ -163,20 +162,25 @@ public class Bank_card extends Client{
      * Проверка срока действия карты
      * @param now текущий день
      */
-    public void notification_expiration_date(LocalDate now) {
+    public String notification_expiration_date(LocalDate now) {
+        String s;
         if (((date_expiration.getMonthValue() - now.getMonthValue() <= 1) && (now.getMonthValue() != 12) && (now.getDayOfMonth() >= date_expiration.getDayOfMonth()) && (now.getYear() == date_expiration.getYear()))
                 || ((now.getMonthValue() == 12) && (date_expiration.getMonthValue() == 1) && (date_expiration.getYear() - now.getYear() == 1) &&(now.getDayOfMonth() >= date_expiration.getDayOfMonth()))) {
-            System.out.println("У клиента '" + client.getFIO()+"' заканчивается срок действия карты." );
+            s = "У клиента '" + client.getFIO()+"' заканчивается срок действия карты." ;
             SendMessage(client.getMail());
         }
         else if (now.isBefore(date_issue) || now.isAfter(date_expiration)) {
-            System.out.println("У клиента '"+ client.getFIO()+"' карта не активна.");
+            s = "У клиента '"+ client.getFIO()+"' карта не активна.";
         }
-        else{
-            System.out.println("У клиента '"+ client.getFIO()+"' срок действия карты больше месяца.");
+        else {
+            s = "У клиента '" + client.getFIO() + "' срок действия карты больше месяца.";
 
         }
+        return s;
     }
+
+
+
 
 
 

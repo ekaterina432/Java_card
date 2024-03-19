@@ -1,8 +1,5 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.time.LocalDate;
-import java.util.UUID;
 
 
 public class Client {
@@ -18,7 +15,7 @@ public class Client {
     private String FIO;
 
     /**
-     * День рождения
+     * Дата рождения
      */
     private LocalDate birthday;
 
@@ -69,7 +66,7 @@ public class Client {
         if (isValidNumderPassword(number_password)) {
             this.number_password = number_password;
         } else {
-            throw new IllegalArgumentException("Некорректные паспортный номер");
+            throw new IllegalArgumentException("Некорректные паспортные данные");
         }
     }
 
@@ -88,6 +85,11 @@ public class Client {
 
         return number_password.matches(regex);
     }
+
+    public String getId() {
+        return id;
+    }
+
     public String getFIO() {
         return FIO;
     }
@@ -120,7 +122,23 @@ public class Client {
         return (parts[1]);
     }
 
-    @Override
+
+    public void addClient(String FIO, LocalDate birth, String mail, List<Client> clients){
+        for (Client clientN : clients) {
+            if (clientN.getFIO().equals(FIO)) {
+                System.out.println("Клиент уже добавлен в базу. ID: " + clientN.getId());
+                return ;
+            }
+            else {
+               Client client = new Client(FIO, birth, mail);
+               clients.add(client);
+
+            }
+        }
+    }
+
+
+        @Override
     public String toString() {
         return "Клиент{" +
                 "id: '" + id + '\'' +

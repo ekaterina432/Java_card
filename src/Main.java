@@ -48,9 +48,27 @@ public class Main {
      */
     public static void checkingDeadlineCards(List<Bank_card> cards, LocalDate nowDay){
         for (Bank_card card: cards){
-            card.notification_expiration_date(nowDay);
+            System.out.println(card.notification_expiration_date(nowDay));
         }
     }
+
+    /**
+     * Проверка есть ли клиент в базе
+     * @param FIO Фамилия, имя, отчество
+     * @param clients Список клиентов
+     * @return Возвращает true, если клиент уже есть в базе
+     */
+    private static boolean chekingClients(String FIO, List<Client> clients){
+        boolean flag = false;
+        for (Client clientN : clients) {
+            if (clientN.getFIO().equals(FIO)) {
+                System.out.println("Клиент уже добавлен в базу. ID: " + clientN.getId());
+                flag = true;
+            }
+        }
+        return flag;
+    }
+
 
     /**
      * Добавление нового клиента через терминал
@@ -61,6 +79,9 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Введите фамилию, имя и отчество: ");
         String FIO = scanner.nextLine();
+        if (chekingClients(FIO, clients) == true){
+            return;
+        };
         System.out.println("Введите дату рождения в формате ГГГГ-М-Д: ");
         String birthday = scanner.nextLine();
         String[] parts = birthday.split("-");
@@ -72,35 +93,85 @@ public class Main {
         System.out.println("Введите серию и номер паспорта (необязательно): ");
         String number_password = scanner.nextLine();
         Client client;
-        if(number_password != "")
-        {
-            client = new Client(FIO, LocalDate.of(year, month, day), mail, number_password );
-        }
-        else
-        {
-             client = new Client(FIO, LocalDate.of(year, month, day), mail);
+        if (number_password != "") {
+            client = new Client(FIO, LocalDate.of(year, month, day), mail, number_password);
+        } else {
+            client = new Client(FIO, LocalDate.of(year, month, day), mail);
         }
         clients.add(client);
         Bank_card card = new Bank_card(client, LocalDate.now());
         System.out.println("Регистрация прошла успешно!\nНомер карты: "+card.getNumber_card()+ "\n"+
-                            "Действует до: " + card.getDate_expiration() + "\nCVC: " + card.getCVC()
-                            );
+                "Действует до: " + card.getDate_expiration() + "\nCVC: " + card.getCVC()
+        );
         cards.add(card);
+
     }
+
+    /** Добавление нового клиента в базу
+     * @param FIO фамилия, имя, отчество
+     * @param birth дата рождения
+     * @param mail почтовый адрес
+     * @param number_password серия и номер паспорта
+     * @param clients список всех клиентов
+     */
+    public static void addClient(String FIO, LocalDate birth, String mail,  String number_password, List<Client> clients){
+        if (chekingClients(FIO, clients) ==true) {
+            return;
+        }
+        Client client = new Client(FIO, birth, mail, number_password);
+        clients.add(client);
+        }
+
+    /**
+     * Добавление нового клиента в базу
+     * @param FIO фамилия, имя, отчество
+     * @param birth дата рождения
+     * @param mail почтовый адрес
+     * @param clients список всех клиентов
+     */
+    public static void addClient(String FIO, LocalDate birth, String mail, List<Client> clients){
+        if (chekingClients(FIO, clients) ==true) {
+            return;
+        }
+        Client client = new Client(FIO, birth, mail);
+        clients.add(client);
+    }
+
+
+
+    /**
+     * Проверка действия карт клиентов до 01.01.2050
+     * @param cards список карт всех клиентов
+     */
+    public static void  cicleNotification(List<Bank_card> cards){
+        LocalDate day = LocalDate.now().minusYears(5);
+        while (day.isBefore(LocalDate.of(2050, 1, 1))) {
+            for (Bank_card card: cards){
+                System.out.println(card.notification_expiration_date(day));
+            }
+            day = day.plusDays(1);
+            System.out.println(day);
+        }
+
+    }
+
+
 
 
     public static void main(String[] args) {
         List<Client> clients = manualСliensBase();
         List<Bank_card> cards = autoCardsBase(clients);
-        manualDataInput(clients, cards);
+        //manualDataInput(clients, cards);
         for (Bank_card card:cards){
             System.out.println(card +"\n");
         }
         System.out.println("\n");
         //Проверка рассылки уведомлений
-        clients.add(new Client("Прищепа Екатерина Григорьевна", LocalDate.of(2002, 8, 3), "prishchepa@sfedu.ru"));
+        addClient("Прищепа Екатерина Григорьевна", LocalDate.of(2002, 8, 3), "prishchepa@sfedu.ru","6384012755", clients );
         cards.add(new Bank_card(clients.get(clients.size() - 1), LocalDate.of(2019, 4, 1)));
         checkingDeadlineCards(cards, LocalDate.now());
+        //cicleNotification(cards);
+
 
     }
 }
