@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Random;
 import java.util.Properties;
 import javax.mail.*;
@@ -95,6 +96,7 @@ public class Bank_card extends Client{
         return CVC;
     }
 
+    public void setCVC(int CVC) { this.CVC = CVC;}
 
     @Override
     public String toString() {
@@ -102,7 +104,7 @@ public class Bank_card extends Client{
                 "клиент: " + client +
                 ", номер карты: '" + number_card + '\'' +
                 ", дата выпуска: " + date_issue +
-                ", дата окончание: " + date_expiration +
+                ", дата окончания: " + date_expiration +
                 ", CVC: " + CVC +
                 '}';
     }
@@ -179,6 +181,27 @@ public class Bank_card extends Client{
         return s;
     }
 
+    /**
+     * Создание новой карты по истечению старой
+     * @param consent согласие клиента на создание карты (true - согласен, false - не согласен)
+     * @param now
+     */
+    public void newCard( boolean consent, LocalDate now){
+            String[] words = notification_expiration_date(now).split("\\s+"); // Разбиваем строку на слова по пробелам
+            int length = words.length;
+            String lastWords =  words[length - 3] + " " + words[length - 2] + " " + words[length - 1];
+            if (lastWords.equals("карта не активна." )) {
+                if (consent == true) {
+                    setNumber_card(generateNumberCard());
+                    setDate_issue(now);
+                    setDate_expiration(now.plusYears(5));
+                    Random random = new Random();
+                    setCVC(random.nextInt(900) + 100);
+                    System.out.println("Новая карта для '" + client.getFIO() + "' выпущена." );
+                }
+            }
+        }
+    }
 
 
 
@@ -186,4 +209,4 @@ public class Bank_card extends Client{
 
 
 
-}
+

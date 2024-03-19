@@ -161,15 +161,23 @@ public class Main {
     public static void main(String[] args) {
         List<Client> clients = manualСliensBase();
         List<Bank_card> cards = autoCardsBase(clients);
-        //manualDataInput(clients, cards);
-        for (Bank_card card:cards){
-            System.out.println(card +"\n");
-        }
-        System.out.println("\n");
-        //Проверка рассылки уведомлений
+        System.out.println("Проверка ручного добавления клиента:");
+        manualDataInput(clients, cards);
+
+        System.out.println("");
+        System.out.println("Проверка рассылки уведомлений:");
         addClient("Прищепа Екатерина Григорьевна", LocalDate.of(2002, 8, 3), "prishchepa@sfedu.ru","6384012755", clients );
-        cards.add(new Bank_card(clients.get(clients.size() - 1), LocalDate.of(2019, 4, 1)));
+        cards.add(new Bank_card(clients.get(clients.size() - 1), LocalDate.of(2019, 4, 2)));
         checkingDeadlineCards(cards, LocalDate.now());
+
+        System.out.println();
+        System.out.println("Проверка создания новой карты:");
+        addClient("Сурикова Светлана Сергеевна", LocalDate.of(2000, 4, 30), "syrvat451@sfedu.ru", clients );
+        cards.add(new Bank_card(clients.get(clients.size() - 1), LocalDate.of(2018, 3, 2)));
+        System.out.println( cards.get(cards.size() - 1));
+        cards.get(cards.size() - 1).newCard( true, LocalDate.of(2024, 3, 2));
+        System.out.println( cards.get(cards.size() - 1));
+
         //cicleNotification(cards);
 
 
