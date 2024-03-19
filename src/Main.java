@@ -140,6 +140,31 @@ public class Main {
 
 
     /**
+     * Удаление активной карты
+     * @param cards список карт
+     * @param numberCardToRemove номер удаляемой карты
+     */
+    public void cancellationCard(List<Bank_card> cards, String numberCardToRemove) {
+
+        Bank_card cardToRemove = null;
+        for (Bank_card card : cards) {
+            if (card.getNumber_card().equals(numberCardToRemove)) {
+                cardToRemove = card;
+                break;
+            }
+        }
+
+        if (cardToRemove !=  null) {
+            cards.remove(cardToRemove);
+            System.out.println("Карта с номером " + cardToRemove.getNumber_card() + "  удалена из базы.");
+        } else {
+            System.out.println("Карта с номером " + cardToRemove.getNumber_card() + " не найдена.");
+        }
+
+    }
+
+
+    /**
      * Проверка действия карт клиентов до 01.01.2050
      * @param cards список карт всех клиентов
      */
@@ -177,6 +202,8 @@ public class Main {
         System.out.println( cards.get(cards.size() - 1));
         cards.get(cards.size() - 1).newCard( true, LocalDate.of(2024, 3, 2));
         System.out.println( cards.get(cards.size() - 1));
+
+
 
         //cicleNotification(cards);
 

@@ -123,19 +123,6 @@ public class Client {
     }
 
 
-    public void addClient(String FIO, LocalDate birth, String mail, List<Client> clients){
-        for (Client clientN : clients) {
-            if (clientN.getFIO().equals(FIO)) {
-                System.out.println("Клиент уже добавлен в базу. ID: " + clientN.getId());
-                return ;
-            }
-            else {
-               Client client = new Client(FIO, birth, mail);
-               clients.add(client);
-
-            }
-        }
-    }
 
 
         @Override
